@@ -133,8 +133,10 @@ class Backimg extends Component {
     // if we have loaded, show img
     if (this.state.isLoaded) {
       // clear non img props
+      // style['backgroundImage']=this.sourceList[this.state.currentIndex]
       let {src, loader, unloader, ...rest} = this.props //eslint-disable-line
-      return <img src={this.sourceList[this.state.currentIndex]} {...rest} />
+      rest.style['backgroundImage']=`url(${this.sourceList[this.state.currentIndex]})`
+      return <div {...rest} />
     }
 
     // if we are still trying to load, show img and a loader if requested
