@@ -30,16 +30,16 @@ class Backimg extends Component {
       // if we have loaded this image before, just load it again
       /* istanbul ignore else */
       if (cache[this.sourceList[i]] === true) {
-        this.state = {currentIndex: i, isLoading: false, isLoaded: true}
+        this.state = {currentIndex: i, isLoading: false, isLoaded: true,  opacity: 1}
         return true
       }
     }
 
     this.state = this.sourceList.length
       // 'normal' opperation: start at 0 and try to load
-      ? {currentIndex: 0, isLoading: true, isLoaded: false}
+      ? {currentIndex: 0, isLoading: true, isLoaded: false, opacity: 0}
       // if we dont have any sources, jump directly to unloaded
-      : {isLoading: false, isLoaded: false}
+      : {isLoading: false, isLoaded: false,  opacity: 0}
   }
 
   srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
@@ -47,7 +47,12 @@ class Backimg extends Component {
   onLoad = () => {
     cache[this.sourceList[this.state.currentIndex]] = true
     /* istanbul ignore else */
-    if (this.i) this.setState({isLoaded: true})
+    if (this.i) {
+      this.setState({isLoaded: true})
+      setTimeout(()=>{
+        this.setState({opacity: 1})
+      },300)
+    }
   }
 
   onError = () => {
@@ -71,6 +76,9 @@ class Backimg extends Component {
       // if we know it exists, use it!
       if (cache[src] === true) {
         this.setState({currentIndex: nextIndex, isLoading: false, isLoaded: true})
+        setTimeout(()=>{
+          this.setState({opacity: 1})
+        },300)
         return true
       }
 
@@ -124,8 +132,8 @@ class Backimg extends Component {
       this.sourceList = src
 
       // if we dont have any sources, jump directly to unloader
-      if (!src.length) return this.setState({isLoading: false, isLoaded: false})
-      this.setState({currentIndex: 0, isLoading: true, isLoaded: false}, this.loadImg)
+      if (!src.length) return this.setState({isLoading: false, isLoaded: false,  opacity: 0})
+      this.setState({currentIndex: 0, isLoading: true, isLoaded: false,  opacity: 0}, this.loadImg)
     }
   }
 
@@ -135,8 +143,8 @@ class Backimg extends Component {
       // clear non img props
       // style['backgroundImage']=this.sourceList[this.state.currentIndex]
       let {src, loader, unloader, ...rest} = this.props //eslint-disable-line
-      rest.style['backgroundImage']=`url(${this.sourceList[this.state.currentIndex]})`
-      return <div {...rest} />
+      const newstyle = {...rest, style:{...rest.style, backgroundImage:`url(${this.sourceList[this.state.currentIndex]})`, 'opacity': this.state.opacity }}
+      return <div {...newstyle} />
     }
 
     // if we are still trying to load, show img and a loader if requested
