@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { node, oneOfType, string, array } from 'prop-types'
 
 const cache = {}
-class Img extends Component {
+class Backimg extends Component {
   static propTypes = {
     loader: node,
     unloader: node,
@@ -146,4 +146,4 @@ class Img extends Component {
   }
 }
 
-export default Img
+export default Backimg
